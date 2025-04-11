@@ -1,6 +1,6 @@
 {
   "scripts": {
     "migrate:new": "npx dbmate --migrations-dir=./migrations_scripts new",
-    "migrate": "npx dbmate --migrations-dir=./migrations_scripts --url 'postgres://postgres:postgres123@127.0.0.1:5432/postgres?sslmode=disable'"
+    "migrate": "dotenv -e .env -- npx dbmate --migrations-dir=./migrations_scripts"
   }
 }
