@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE,
   role TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'user')),
   password_hash TEXT NOT NULL,
-  create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- migrate:down
