@@ -3,13 +3,13 @@ import { UUID } from 'crypto'
 export type Company = {
   id: UUID
   name: string
-  CNPJ: string
+  cnpj: string
   created_date: string
 }
 
 export type CreateCompanyParams = {
   name: string
-  CNPJ: string
+  cnpj: string
 }
 
 export type CreateCompanyResult = {

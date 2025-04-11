@@ -10,7 +10,7 @@ export async function createCompany (
     VALUES ($1, $2)
     RETURNING id
     `,
-    [data.name, data.CNPJ]
+    [data.name, data.cnpj]
   )
 
   const newId = rows[0].id
