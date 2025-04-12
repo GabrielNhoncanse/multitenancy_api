@@ -1,19 +1,32 @@
+import { UUID } from 'crypto'
 import { pool } from '../database/pool'
 import { CreateCompanyParams, CreateCompanyResult } from '../types'
 
-export async function createCompany (
-  data: CreateCompanyParams
-): Promise<CreateCompanyResult> {
-  const { rows } = await pool.query(
-    `
-    INSERT INTO companies (name, cnpj)
-    VALUES ($1, $2)
-    RETURNING id
-    `,
-    [data.name, data.cnpj]
-  )
+export class CompanyRepository {
 
-  const newId = rows[0].id
+  async create (
+    params: CreateCompanyParams
+  ): Promise<CreateCompanyResult> {
+    const { name, cnpj } = params
 
-  return { id: newId }
+    const alreadyExists = await pool.query<{ id: string }>(`
+      SELECT id FROM companies WHERE cnpj = $1`,
+      [cnpj]
+    )
+
+    if (alreadyExists.rows.length > 0) {
+      throw new Error('Company alredy registered')
+    }
+
+    const { rows } = await pool.query<{ id: UUID }>(`
+      INSERT INTO companies (name, cnpj)
+      VALUES ($1, $2)
+      RETURNING id`,
+      [name, cnpj]
+    )
+
+    const newId = rows[0].id
+
+    return { id: newId }
+  }
 }
