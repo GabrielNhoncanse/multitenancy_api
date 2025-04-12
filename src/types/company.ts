@@ -4,7 +4,7 @@ export type Company = {
   id: UUID
   name: string
   cnpj: string
-  created_date: string
+  createdDate: string
 }
 
 export type CreateCompanyParams = {
