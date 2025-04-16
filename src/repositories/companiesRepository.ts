@@ -2,7 +2,7 @@ import { UUID } from 'crypto'
 import { pool } from '../database/pool'
 import { CreateCompanyParams, CreateCompanyResult } from '../types'
 
-export class CompanyRepository {
+export class CompaniesRepository {
 
   async create (
     params: CreateCompanyParams

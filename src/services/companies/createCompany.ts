@@ -1,4 +1,4 @@
-import { CompanyRepository } from '../../repositories'
+import { CompaniesRepository } from '../../repositories'
 import { CreateCompanyParams } from '../../types'
 import * as yup from 'yup'
 
@@ -7,7 +7,7 @@ const newCompanyShape = yup.object().shape({
   cnpj: yup.string().required().length(14, 'CNPJ must have 14 digits')
 })
 
-const companyRepository = new CompanyRepository()
+const companiesRepository = new CompaniesRepository()
 
 export async function createCompany (
   params: CreateCompanyParams
@@ -16,7 +16,7 @@ export async function createCompany (
 
   await newCompanyShape.validate(params)
 
-  const newId = await companyRepository.create(params)
+  const newId = await companiesRepository.create(params)
 
   return newId
 }
