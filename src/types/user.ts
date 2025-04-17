@@ -5,7 +5,7 @@ export type CreateUserParams = {
   name: string
   email: string
   role: UserRoleOptions
-  plainPassword: string
+  password: string
 }
 
 export type CreateUserResult = {

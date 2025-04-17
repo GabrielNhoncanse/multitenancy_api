@@ -18,7 +18,7 @@ export async function createUser (
 ): Promise<CreateUserResult> {
   await newUserShape.validate(params)
 
-  const passwordHash = await bcrypt.hash(params.plainPassword, 13)
+  const passwordHash = await bcrypt.hash(params.password, 13)
 
   const newUserId = await usersRepository.create(params, passwordHash)
 
