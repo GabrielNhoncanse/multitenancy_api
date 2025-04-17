@@ -1,24 +1,58 @@
-import { CompaniesRepository } from '../../repositories'
-import { CreateCompanyParams } from '../../types'
+import { pool } from '../../database/pool'
+import { CompaniesRepository, UsersRepository } from '../../repositories'
+import { CreateCompanyParams, CreateCompanyResult } from '../../types'
 import * as yup from 'yup'
+import bcrypt from 'bcrypt'
 
-const newCompanyShape = yup.object().shape({
-  name: yup.string().required(),
-  cnpj: yup.string().required().length(14, 'CNPJ must have 14 digits')
+const createCompanyCommandShape = yup.object().shape({
+  company: yup.object({
+    name: yup.string().required(),
+    cnpj: yup.string().required()
+  }),
+  adminUser: yup.object({
+    name: yup.string().required(),
+    email: yup.string().email('The entered email is not valid').required(),
+    password: yup.string().required()
+  })
 })
 
 const companiesRepository = new CompaniesRepository()
+const usersRepository = new UsersRepository()
 
 export async function createCompany (
   params: CreateCompanyParams
-) {
-  params.cnpj = sanitize(params.cnpj)
+): Promise<CreateCompanyResult> {
+  const client = await pool.connect()
 
-  await newCompanyShape.validate(params)
+  try {
+    await client.query('BEGIN')
 
-  const newId = await companiesRepository.create(params)
+    await createCompanyCommandShape.validate(params)
 
-  return newId
+    params.company.cnpj = sanitize(params.company.cnpj)
+
+    const newCompany = await companiesRepository.create(params, client)
+
+    const passwordHash = await bcrypt.hash(params.adminUser.password, 13)
+
+    await usersRepository.create({
+      companyId: newCompany.id,
+      role: 'admin',
+      ...params.adminUser
+    },
+      passwordHash,
+      client
+    )
+
+    await client.query('COMMIT')
+
+    return newCompany
+  } catch (error) {
+    await client.query('ROLLBACK')
+    throw error
+  } finally {
+    client.release()
+  }
 }
 
 function sanitize (text: string) {
