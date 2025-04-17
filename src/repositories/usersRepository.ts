@@ -1,16 +1,20 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
 import { CreateUserParams, CreateUserResult } from '../types'
+import { PoolClient } from 'pg'
 
 export class UsersRepository {
 
   async create (
     params: CreateUserParams,
-    passwordHash: string
+    passwordHash: string,
+    client?: PoolClient
   ): Promise<CreateUserResult> {
     const { companyId, name, email, role } = params
 
-    const alreadyExists = await pool.query<{ id: UUID }>(`
+    const db = client ?? pool
+
+    const alreadyExists = await db.query<{ id: UUID }>(`
       SELECT id FROM users WHERE email = $1`,
       [email]
     )
@@ -19,7 +23,7 @@ export class UsersRepository {
       throw new Error('Email already registered')
     }
 
-    const { rows } = await pool.query<{ id: UUID }>(`
+    const { rows } = await db.query<{ id: UUID }>(`
       INSERT INTO users (company_id, name, email, role, password_hash)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING id`,

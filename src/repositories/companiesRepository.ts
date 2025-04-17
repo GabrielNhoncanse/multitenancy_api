@@ -1,28 +1,32 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
 import { CreateCompanyParams, CreateCompanyResult } from '../types'
+import { PoolClient } from 'pg'
 
 export class CompaniesRepository {
 
   async create (
-    params: CreateCompanyParams
+    params: Pick<CreateCompanyParams, 'company'>,
+    client?: PoolClient
   ): Promise<CreateCompanyResult> {
-    const { name, cnpj } = params
+    const { company } = params
 
-    const alreadyExists = await pool.query<{ id: string }>(`
+    const db = client ?? pool
+
+    const alreadyExists = await db.query<{ id: string }>(`
       SELECT id FROM companies WHERE cnpj = $1`,
-      [cnpj]
+      [company.cnpj]
     )
 
     if (alreadyExists.rows.length > 0) {
       throw new Error('Company alredy registered')
     }
 
-    const { rows } = await pool.query<{ id: UUID }>(`
+    const { rows } = await db.query<{ id: UUID }>(`
       INSERT INTO companies (name, cnpj)
       VALUES ($1, $2)
       RETURNING id`,
-      [name, cnpj]
+      [company.name, company.cnpj]
     )
 
     const newId = rows[0].id
