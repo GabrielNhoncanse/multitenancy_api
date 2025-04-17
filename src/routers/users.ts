@@ -1,9 +1,7 @@
 import { Router } from 'express'
 
-const router = Router()
+export const usersRouter = Router()
 
-router.get('/', (req, res) => {
+usersRouter.get('/', (req, res) => {
   res.send('users')
 })
-
-export default router
