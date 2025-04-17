@@ -8,8 +8,15 @@ export type Company = {
 }
 
 export type CreateCompanyParams = {
-  name: string
-  cnpj: string
+  company: {
+    name: string
+    cnpj: string
+  },
+  adminUser: {
+    name: string
+    email: string
+    password: string
+  }
 }
 
 export type CreateCompanyResult = {
