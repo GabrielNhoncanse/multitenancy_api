@@ -4,7 +4,7 @@ import { CreateCompanyParams, CreateCompanyResult } from '../../types'
 import * as yup from 'yup'
 import bcrypt from 'bcrypt'
 
-const createCompanyCommandShape = yup.object().shape({
+const createCompanySchema = yup.object().shape({
   company: yup.object({
     name: yup.string().required(),
     cnpj: yup.string().required()
@@ -27,7 +27,7 @@ export async function createCompany (
   try {
     await client.query('BEGIN')
 
-    await createCompanyCommandShape.validate(params)
+    await createCompanySchema.validate(params)
 
     params.company.cnpj = sanitize(params.company.cnpj)
 
