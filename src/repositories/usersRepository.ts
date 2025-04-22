@@ -40,7 +40,7 @@ export class UsersRepository {
   ): Promise<GetUserByEmailResult> {
 
     const { rows } = await pool.query<GetUserByEmailResult>(`
-      SELECT id AS "userId", company_id AS "companyId", password_hash AS "passwordHash", role
+      SELECT id, company_id AS "companyId", password_hash AS "passwordHash", role
       FROM users
       WHERE email = $1`,
       [email]

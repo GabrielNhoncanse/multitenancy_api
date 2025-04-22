@@ -13,8 +13,8 @@ export type CreateUserResult = {
 }
 
 export type GetUserByEmailResult = {
+  id: UUID
   companyId: UUID
-  userId: UUID
   passwordHash: string
   role: UserRoleOptions
 }
