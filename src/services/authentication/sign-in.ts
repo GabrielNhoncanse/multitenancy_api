@@ -18,7 +18,7 @@ export async function signIn (
 
   const { password } = params
 
-  const { companyId, userId, passwordHash } = await usersRepository.getByEmail(params.email)
+  const { companyId, userId, passwordHash, role } = await usersRepository.getByEmail(params.email)
 
   const isValidPassword = await bcrypt.compare(password, passwordHash)
 
@@ -30,7 +30,7 @@ export async function signIn (
     throw new Error('JWT_SECRET_TOKEN is not defined ')
   }
 
-  const jwtToken = jwt.sign({ companyId, userId }, process.env.JWT_SECRET_TOKEN, { expiresIn: '1h' })
+  const jwtToken = jwt.sign({ companyId, userId, role }, process.env.JWT_SECRET_TOKEN, { expiresIn: '1h' })
 
   return { jwtToken }
 }

@@ -16,6 +16,7 @@ export type GetUserByEmailResult = {
   companyId: UUID
   userId: UUID
   passwordHash: string
+  role: UserRoleOptions
 }
 
 export type SignInUserParams = {
