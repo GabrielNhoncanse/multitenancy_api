@@ -1,6 +1,6 @@
 import { UUID } from 'crypto'
 
-export type CreateTaskParams = Omit<Task, 'id' | 'createdDate'>
+export type CreateTaskParams = Pick<Task, 'title' | 'description' | 'dueDate'>
 
 export type CreateTaskResult = Pick<Task, 'id'>
 
