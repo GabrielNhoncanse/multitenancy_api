@@ -1,5 +1,6 @@
 import express from 'express'
-import { authenticationRouter, companiesRouter, usersRouter } from './routers'
+import { authenticationRouter, companiesRouter, tasksRouter, usersRouter } from './routers'
+import { authenticate } from './middlewares'
 
 export async function buildApp () {
   const app = express()
@@ -13,7 +14,8 @@ export async function buildApp () {
   app.use('/companies', companiesRouter)
 
   // Protected routes // to-do: add auth middleware
-  app.use('/users', usersRouter)
+  app.use('/tasks', authenticate, tasksRouter)
+  app.use('/users', authenticate, usersRouter)
 
   return app
 }
