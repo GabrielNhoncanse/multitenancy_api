@@ -12,6 +12,18 @@ export type CreateUserResult = {
   id: UUID
 }
 
+export type GetUserByEmailResult = {
+  companyId: UUID
+  userId: UUID
+  passwordHash: string
+}
+
+export type SignInUserParams = {
+  email: string
+  password: string
+}
+
+
 export type User = {
   id: UUID
   companyId: UUID

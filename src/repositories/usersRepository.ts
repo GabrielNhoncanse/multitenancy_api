@@ -1,6 +1,6 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
-import { CreateUserParams, CreateUserResult } from '../types'
+import { CreateUserParams, CreateUserResult, GetUserByEmailResult } from '../types'
 import { PoolClient } from 'pg'
 
 export class UsersRepository {
@@ -33,5 +33,23 @@ export class UsersRepository {
     const newId = rows[0].id
 
     return { id: newId }
+  }
+
+  async getByEmail (
+    email: string
+  ): Promise<GetUserByEmailResult> {
+
+    const { rows } = await pool.query<GetUserByEmailResult>(`
+      SELECT id AS "userId", company_id AS "companyId", password_hash AS "passwordHash"
+      FROM users
+      WHERE email = $1`,
+      [email]
+    )
+
+    if (rows.length === 0) {
+      throw new Error('User not found')
+    }
+
+    return rows[0]
   }
 }
