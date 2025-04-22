@@ -1,13 +1,15 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
-import { CreateTaskParams, CreateTaskResult } from '../types'
+import { Authentication, CreateTaskParams, CreateTaskResult } from '../types'
 
 export class TasksRepository {
 
   async create (
+    authentication: Authentication,
     params: CreateTaskParams
   ): Promise<CreateTaskResult> {
-    const { companyId, userId, title, description, dueDate } = params
+    const { companyId, userId } = authentication
+    const { title, description, dueDate } = params
 
     const { rows } = await pool.query<{ companyExists: boolean, userExists: boolean }>(`
       SELECT
