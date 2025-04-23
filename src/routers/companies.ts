@@ -9,6 +9,6 @@ companiesRouter.post('/', async (req, res) => {
 
     res.status(201).json({ companyId })
   } catch (error) {
-    res.status(400).send(error instanceof Error ? error.message : 'Unkown error')
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unkown error' })
   }
 })

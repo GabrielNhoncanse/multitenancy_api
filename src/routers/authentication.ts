@@ -9,6 +9,6 @@ authenticationRouter.post('/sign-in', async (req, res) => {
 
     res.status(200).json({ token: jwtToken })
   } catch (error) {
-    res.status(400).send(error instanceof Error ? error.message : 'Unkown error')
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unkown error' })
   }
 })
