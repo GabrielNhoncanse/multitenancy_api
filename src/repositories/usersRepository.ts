@@ -8,9 +8,10 @@ export class UsersRepository {
   async create (
     params: CreateUserParams,
     passwordHash: string,
+    companyId: UUID,
     client?: PoolClient
   ): Promise<CreateUserResult> {
-    const { companyId, name, email, role } = params
+    const { name, email, role } = params
 
     const db = client ?? pool
 

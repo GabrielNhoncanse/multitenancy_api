@@ -1,7 +1,6 @@
 import { UUID } from 'crypto'
 
 export type CreateUserParams = {
-  companyId: UUID
   name: string
   email: string
   role: UserRoleOptions

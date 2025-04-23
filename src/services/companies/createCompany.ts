@@ -36,11 +36,11 @@ export async function createCompany (
     const passwordHash = await bcrypt.hash(params.adminUser.password, 13)
 
     await usersRepository.create({
-      companyId: newCompany.id,
       role: 'admin',
       ...params.adminUser
     },
       passwordHash,
+      newCompany.id,
       client
     )
 
