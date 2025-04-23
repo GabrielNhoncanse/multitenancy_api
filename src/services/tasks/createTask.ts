@@ -5,7 +5,8 @@ import { TasksRepository } from '../../repositories'
 const newTaskShape = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().nullable(),
-  dueDate: yup.date().typeError('Due date must be a valid date in ISO format. (e.g.: 2025-04-28T14:00:00Z)').required()
+  dueDate: yup.date().typeError('Due date must be a valid date in ISO format. (e.g.: 2025-04-28T14:00:00Z)').required(),
+  status: yup.string().required().oneOf(['to do', 'doing', 'done'])
 })
 
 const tasksRepository = new TasksRepository()

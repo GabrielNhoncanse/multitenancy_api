@@ -9,7 +9,7 @@ export class TasksRepository {
     params: CreateTaskParams
   ): Promise<CreateTaskResult> {
     const { companyId, userId } = authentication
-    const { title, description, dueDate } = params
+    const { title, description, dueDate, status } = params
 
     const { rows } = await pool.query<{ companyExists: boolean, userExists: boolean }>(`
       SELECT
@@ -30,10 +30,10 @@ export class TasksRepository {
     }
 
     const result = await pool.query<{ id: UUID }>(`
-      INSERT INTO tasks (company_id, user_id, title, description, due_date)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO tasks (company_id, user_id, title, description, due_date, status)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id`,
-      [companyId, userId, title, description, dueDate]
+      [companyId, userId, title, description, dueDate, status]
     )
 
     return { id: result.rows[0].id }
