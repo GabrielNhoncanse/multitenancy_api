@@ -13,7 +13,7 @@ export async function buildApp () {
   app.use('/auth', authenticationRouter)
   app.use('/companies', companiesRouter)
 
-  // Protected routes // to-do: add auth middleware
+  // Protected routes
   app.use('/tasks', authenticate, tasksRouter)
   app.use('/users', authenticate, usersRouter)
 
