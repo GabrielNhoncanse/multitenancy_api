@@ -7,7 +7,7 @@ const newUserShape = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email('The entered email is not valid').required(),
   role: yup.string().required().oneOf(['admin', 'manager', 'user']),
-  plainPassword: yup.string().required()
+  password: yup.string().required()
 })
 
 const usersRepository = new UsersRepository()
@@ -17,9 +17,7 @@ export async function createUser (
   params: CreateUserParams
 ): Promise<CreateUserResult> {
 
-  if (authentication.role === 'user') {
-    throw new Error('User must be an admin or manager to create tasks')
-  }
+  if (authentication.role === 'user') throw new Error('User must be an admin or manager to create tasks')
 
   await newUserShape.validate(params)
 
