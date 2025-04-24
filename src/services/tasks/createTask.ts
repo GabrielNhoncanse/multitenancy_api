@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import { Authentication, CreateCompanyResult, CreateTaskParams } from '../../types'
+import { Authentication, CreateTaskParams, CreateTaskResult } from '../../types'
 import { TasksRepository } from '../../repositories'
 
 const newTaskShape = yup.object().shape({
@@ -14,7 +14,7 @@ const tasksRepository = new TasksRepository()
 export async function createTask (
   authentication: Authentication,
   params: CreateTaskParams
-): Promise<CreateCompanyResult> {
+): Promise<CreateTaskResult> {
   await newTaskShape.validate(params)
 
   if (authentication.role === 'user') throw new Error('User must be an admin or manager to create users')
