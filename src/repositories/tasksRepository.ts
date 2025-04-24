@@ -1,6 +1,6 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
-import { Authentication, CreateTaskParams, CreateTaskResult } from '../types'
+import { Authentication, CreateTaskParams, CreateTaskResult, Task } from '../types'
 
 export class TasksRepository {
 
@@ -37,5 +37,24 @@ export class TasksRepository {
     )
 
     return { id: result.rows[0].id }
+  }
+
+  async getById (
+    authentication: Authentication,
+    id: UUID
+  ): Promise<Task> {
+    const { companyId } = authentication
+
+    const { rows } = await pool.query<Task>(`
+      SELECT id, company_id AS "companyId", user_id AS "userId", title, description, created_date AS "createdDate", due_date AS "dueDate", status
+      FROM tasks
+      WHERE id = $1
+        AND company_id = $2`,
+      [id, companyId]
+    )
+
+    if (rows.length === 0) throw new Error(`No task with id ${id} found on company ${companyId}`)
+
+    return rows[0]
   }
 }
