@@ -17,7 +17,7 @@ export async function createTask (
 ): Promise<CreateTaskResult> {
   await newTaskShape.validate(params)
 
-  if (authentication.role === 'user') throw new Error('User must be an admin or manager to create users')
+  if (authentication.role === 'user') throw new Error('User must be an admin or manager to create tasks')
 
   const result = await tasksRepository.create(authentication, params)
 

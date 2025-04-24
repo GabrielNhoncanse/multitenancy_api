@@ -17,7 +17,7 @@ export async function createUser (
   params: CreateUserParams
 ): Promise<CreateUserResult> {
 
-  if (authentication.role === 'user') throw new Error('User must be an admin or manager to create tasks')
+  if (authentication.role === 'user') throw new Error('User must be an admin or manager to create users')
 
   await newUserShape.validate(params)
 
