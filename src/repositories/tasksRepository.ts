@@ -1,6 +1,6 @@
 import { UUID } from 'crypto'
 import { pool } from '../database/pool'
-import { Authentication, CreateTaskParams, CreateTaskResult, Task } from '../types'
+import { Authentication, CreateTaskParams, CreateTaskResult, Task, UpdateTaskParams } from '../types'
 
 export class TasksRepository {
 
@@ -56,5 +56,25 @@ export class TasksRepository {
     if (rows.length === 0) throw new Error(`No task with id ${id} found on company ${companyId}`)
 
     return rows[0]
+  }
+
+  async update (
+    params: UpdateTaskParams,
+    taskId: UUID
+  ): Promise<void> {
+    const entries = Object.entries(params)
+
+    const properties = entries.map(([key], index) => {
+      return `${key} = $${index + 1}`
+    }).join(', ')
+
+    const values: string[] = entries.map(([_, value]) => {
+      return value!
+    })
+    values.push(taskId)
+
+    const query = `UPDATE tasks SET ${properties} WHERE id = $${values.length}`
+
+    await pool.query(query, values)
   }
 }

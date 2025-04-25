@@ -16,3 +16,10 @@ export type Task = {
 }
 
 export type TaskStatusOptions = 'to do' | 'doing' | 'done'
+
+export type UpdateTaskParams = {
+  title?: string
+  description?: string | null
+  due_date?: string // snake_case to make query construction easier
+  status?: TaskStatusOptions
+}
