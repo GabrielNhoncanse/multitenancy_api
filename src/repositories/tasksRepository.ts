@@ -58,16 +58,38 @@ export class TasksRepository {
     return rows[0]
   }
 
+  async listByUserId (
+    authentication: Authentication,
+    userId: UUID
+  ): Promise<Task[]> {
+    const { companyId } = authentication
+
+    const { rows } = await pool.query<Task>(`
+      SELECT id, company_id AS "companyId", user_id AS "userId", title, description, created_date AS "createdDate", due_date AS "dueDate", status
+      FROM tasks
+      WHERE user_id = $1
+        AND company_id = $2
+      `,
+      [userId, companyId]
+    )
+
+    if (rows.length === 0) throw new Error(`No tasks for user ${userId} found on company ${companyId}`)
+
+    return rows
+  }
+
   async update (
     params: UpdateTaskParams,
     taskId: UUID
   ): Promise<void> {
     const entries = Object.entries(params)
 
+    // Build the query with each property and the value index '$'
     const properties = entries.map(([key], index) => {
       return `${key} = $${index + 1}`
     }).join(', ')
 
+    // Build an array with all the properties values
     const values: string[] = entries.map(([_, value]) => {
       return value!
     })
